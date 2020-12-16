@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <div class="container">
-      <h1>Seu gerenciador digital de contatos</h1>
+      <h1 class="title is-4">Seu gerenciador digital de contatos</h1>
       <div class="columns">
         <div class="column is-4" v-for="contact in contactList" :key="contact.id">
           <div class="card">
@@ -20,7 +20,6 @@
                   <p class="subtitle is-6">{{contact.number}}</p>
                 </div>
               </div>
-
               <div class="content">
                {{contact.description}}
               </div>
