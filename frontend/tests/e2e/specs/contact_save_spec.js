@@ -9,9 +9,6 @@
 //     }
 // } modelo de custom action para execução
 
-
-
-
 describe('Cadastro de contatos', () => {
     describe('Novo contato', () => {
         let contact = {

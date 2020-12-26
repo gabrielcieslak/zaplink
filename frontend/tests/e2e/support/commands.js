@@ -24,25 +24,37 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add("dash",()=>{
+Cypress.Commands.add("dash", () => {
     cy.visit('dashboard')
 })
-Cypress.Commands.add("createContact", (contact) => { 
+
+Cypress.Commands.add("searchContact", (number) => {
+    cy.get('.level-right input').type(number)
+    cy.get('.level-right button.is-primary').click()
+})
+
+Cypress.Commands.add("createContact", (contact) => {
     cy.get('#addNewContact').click()
-    if(contact.name) cy.get('.input-name input').type(contact.name)
-    if(contact.number) cy.get('.input-number input').type(contact.number)
-    if(contact.description) cy.get('.text-description textarea').type(contact.description)
+    if (contact.name) cy.get('.input-name input').type(contact.name)
+    if (contact.number) cy.get('.input-number input').type(contact.number)
+    if (contact.description) cy.get('.text-description textarea').type(contact.description)
     cy.get('#saveButton').click()
 })
-Cypress.Commands.add("contactList",()=>{
+Cypress.Commands.add("contactList", () => {
     return cy.get('.contact-list')
 })
-Cypress.Commands.add("nameError",()=>{
+
+Cypress.Commands.add("contactItem", () => {
+    return cy.get('.card')
+})
+
+
+Cypress.Commands.add("nameError", () => {
     return cy.get('.input-name small')
 })
-Cypress.Commands.add("numberError",()=>{
+Cypress.Commands.add("numberError", () => {
     return cy.get('.input-number small')
 })
-Cypress.Commands.add("descriptionError",()=>{
+Cypress.Commands.add("descriptionError", () => {
     return cy.get('.text-description small')
 })

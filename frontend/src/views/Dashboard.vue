@@ -1,13 +1,47 @@
 <template>
   <div class="dashboard">
     <div class="container">
-      <h4 class="title is-4">Seu gerenciador digital de contatos</h4>
-      <button id="addNewContact"
-        class="button is-success is-medium"
-        @click="showContactAddModal = true"
-      >
-        +
-      </button>
+      <!-- Main container -->
+      <nav class="level">
+        <!-- Left side -->
+        <div class="level-left">
+          <div class="level-item">
+            <h4 class="title is-4">Seu gerenciador digital de contatos</h4>
+          </div>
+        </div>
+
+        <!-- Right side -->
+        <div class="level-right">
+          <div class="level-item">
+            <button
+              id="addNewContact"
+              class="button is-success"
+              @click="showContactAddModal = true"
+            >
+              +
+            </button>
+          </div>
+
+          <div class="level-item">
+            <div class="field has-addons">
+              <p class="control">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Número do contato"
+                  v-model="searchInput"
+                />
+              </p>
+              <p class="control">
+                <button class="button is-primary" @click="search()">
+                  Buscar
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       <div class="contact-list columns is-multiline">
         <div
           class="column is-4"
@@ -57,14 +91,15 @@
               />
             </header>
             <section class="modal-card-body">
-              <div class="field  input-name">
+              <div class="field input-name">
                 <input
                   class="input is-primary"
                   v-model="form.name"
                   placeholder="Nome Completo"
                 />
-                <small class="has-text-danger" v-if="errorName === true">Nome inválido</small>
-
+                <small class="has-text-danger" v-if="errorName === true"
+                  >Nome inválido</small
+                >
               </div>
               <div class="field input-number">
                 <input
@@ -72,7 +107,9 @@
                   v-model="form.number"
                   placeholder="WhatsApp"
                 />
-                <small class="has-text-danger" v-if="errorNumber === true">Número inválido</small>
+                <small class="has-text-danger" v-if="errorNumber === true"
+                  >Número inválido</small
+                >
               </div>
               <div class="field text-description">
                 <textarea
@@ -80,11 +117,18 @@
                   v-model="form.description"
                   placeholder="Assunto"
                 />
-                <small class="has-text-danger" v-if="errorDescription === true">Assunto deve conter ao menos 10 caracteres</small>
+                <small class="has-text-danger" v-if="errorDescription === true"
+                  >Assunto deve conter ao menos 10 caracteres</small
+                >
               </div>
             </section>
             <footer class="modal-card-foot">
-              <button id="saveButton" type="button" class="button is-success" @click="create">
+              <button
+                id="saveButton"
+                type="button"
+                class="button is-success"
+                @click="create"
+              >
                 Cadastrar
               </button>
             </footer>
@@ -105,6 +149,7 @@ export default {
       errorName: false,
       errorNumber: false,
       errorDescription: false,
+      searchInput: "",
       form: {
         name: "",
         number: "",
@@ -113,31 +158,41 @@ export default {
     };
   },
   methods: {
+    search() {
+      if (this.searchInput != "") {
+        this.contactList = this.contactList.filter(
+          (contact) => contact.number === this.searchInput
+        )
+      } else {
+        this.list()
+      }
+    },
     create() {
-      this.errorName= false
-      this.errorNumber= false
-      this.errorDescription= false
+      this.errorName = false;
+      this.errorNumber = false;
+      this.errorDescription = false;
 
       if (this.form.name === "" || this.form.name.length < 3) {
         this.errorName = true;
       }
-      if (this.form.number === "" || this.form.number.length < 9 ) {
+      if (this.form.number === "" || this.form.number.length < 9) {
         this.errorNumber = true;
       }
-      if (this.form.description === "" || this.form.description.length < 4 ) {
+      if (this.form.description === "" || this.form.description.length < 4) {
         this.errorDescription = true;
       }
-      if(this.errorName === false && this.errorNumber === false && this.errorDescription === false){
+      if (
+        this.errorName === false &&
+        this.errorNumber === false &&
+        this.errorDescription === false
+      ) {
         window.axios.post("/contacts", this.form).then(async (res) => {
-        await res.data;
-        this.showContactAddModal = false;
-        // window.location.reload(); alternativa para o this.list
-        this.list();
-      });
-
+          await res.data;
+          this.showContactAddModal = false;
+          // window.location.reload(); alternativa para o this.list
+          this.list();
+        });
       }
-
-     
     },
     list() {
       window.axios.get("/contacts").then(async (res) => {
